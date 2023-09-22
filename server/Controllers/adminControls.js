@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Admin from "../models/admin.js";
+import Students from "../models/student.js";
 import { isValidObjectId } from "mongoose";
 
 export const signUp = async (req, res) => {
@@ -189,6 +190,143 @@ export const updateAdmin = async (req, res) => {
     console.log(error);
     return res.status(500).json({
       message: "Something went wrong. Please try again later.",
+      success: false,
+    });
+  }
+};
+
+export const addIndividualStudent = async (req, res) => {
+  try {
+    const data = req.body;
+
+    const isStudentAlreadyExisting = await Students.findOne({
+      email: data.email,
+    });
+    const isRollNoRegistered = await Students.findOne({ urn: data.urn });
+
+    if (isStudentAlreadyExisting || isRollNoRegistered) {
+      return res
+        .status(400)
+        .json({ message: "Email or URN elready exists.", success: false });
+    }
+    const password = await bcrypt.hash(data.email, 10);
+
+    await Students.create({
+      name: data.name,
+      email: data.email,
+      department: data.department,
+      phoneNumber: data.phoneNumber,
+      urn: data.urn,
+      password,
+    });
+    return res
+      .status(200)
+      .json({ message: "Student added Successfully.", success: true });
+  } catch (error) {
+    return res.status(500).json({ message: error.message, success: false });
+  }
+};
+
+export const addMultipleStudents = async (req, res) => {
+  try {
+    const added = [];
+    const rejected = [];
+    const students = req.body.students;
+
+    for (let i = 0; i < students.length; i++) {
+      const { urn, phoneNumber, name, section, semester, department, email } =
+        students[i];
+
+      const studentAlreadyAdded = await Students.findOne({ urn });
+      if (studentAlreadyAdded) {
+        rejected.push(students[i]);
+        continue;
+      }
+      const encryptedPassword = await bcrypt.hash(email, 10);
+      await Students.create({
+        name,
+        urn,
+        password: encryptedPassword,
+        phoneNumber,
+        email,
+        department,
+        semester,
+      });
+      added.push(students[i]);
+    }
+    return res.status(200).json({
+      data: { added, rejected },
+      message: `Students Added Successfully. Out of ${students.length} - ${added.length} are Added and ${rejected.length} are Rejected.`,
+      success: true,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Something went wrong", success: false });
+  }
+};
+
+export const fetchAllStudents = async (req, res) => {
+  try {
+    const students = await Students.find().limit(60);
+    const studentData = students.map((student) => ({
+      name: student.name,
+      email: student.email,
+      semester: student.semester,
+      department: student.department,
+      urn: student.urn,
+      phoneNumber: student.phoneNumber,
+    }));
+    return res.status(200).json({
+      message: "Students data sent successfully.",
+      students: studentData,
+      success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Something went wrong. Please try again.",
+      success: false,
+    });
+  }
+};
+
+export const deleteSingleStudent = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    await Students.findByIdAndRemove(id);
+
+    return res.status(200).json({
+      success: true,
+      message: "Successfully deleted student.",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Something went wrong. Please try again.",
+      success: false,
+    });
+  }
+};
+
+export const deleteMultipleStudents = async (req, res) => {
+  try {
+    const students = req.body;
+
+    for (let i = 0; i < students.length; i++) {
+      await Students.findOneAndDelete({
+        email: students[i].email,
+        urn: students[i].urn,
+      });
+    }
+    return res.status(200).json({
+      message: `Successfully removed ${students.length} student${
+        students.length > 1 && "s"
+      }.`,
+      success: "true",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Something went wrong. Please try again.",
       success: false,
     });
   }
