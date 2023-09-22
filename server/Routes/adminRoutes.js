@@ -9,6 +9,15 @@ import {
   fetchAllStudents,
   deleteSingleStudent,
   deleteMultipleStudents,
+  updateSingleStudent,
+  fetchBooks,
+  searchBook,
+  addSingleBook,
+  addMultipleBooks,
+  issueBooks,
+  deleteBook,
+  editBook,
+  returnBooks,
 } from "../Controllers/adminControls.js";
 
 const router = express.Router();
@@ -18,11 +27,22 @@ router.post("/sign-up", signUp);
 router.post("/login", loginAdmin);
 router.patch("/update-admin", updateAdmin);
 
-//! studnet Routes.... All require middleware to call and prorceed further....
-router.get("/fetch-students", fetchAllStudents);
-router.post("/add-individual-student", addIndividualStudent);
-router.post("/add-multiple-students", addMultipleStudents);
-router.delete("/delete-student/:id", deleteSingleStudent);
-router.delete("/delete-students", deleteMultipleStudents);
+//! student Routes.... All require middleware to call and prorceed further....
+router.get("/student/fetch-students", fetchAllStudents);
+router.post("/student/add-individual-student", addIndividualStudent);
+router.post("/student/add-multiple-students", addMultipleStudents);
+router.patch("/student/update-student", updateSingleStudent);
+router.delete("/student/delete-student/:id", deleteSingleStudent);
+router.delete("/student/delete-students", deleteMultipleStudents);
+
+//! library Routes.... All require middleware to call and prorceed further ...
+router.get("/library/fetch-books", fetchBooks);
+router.get("/library/search-book", searchBook);
+router.post("/library/add-single-book", addSingleBook);
+router.post("/library/add-multiple-books", addMultipleBooks);
+router.post("/library/issue-books", issueBooks);
+router.patch("/library/edit-book", editBook);
+router.patch("/library/return-books", returnBooks);
+router.delete("/library/delete-book", deleteBook);
 
 export default router;

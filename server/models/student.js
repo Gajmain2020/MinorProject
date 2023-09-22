@@ -10,6 +10,22 @@ const studentSchema = mongoose.Schema({
   password: reqString,
   phoneNumber: reqString,
   semester: String,
+  libraryCurrentIssues: [
+    {
+      bookId: String,
+      bookName: String,
+      bookIssueDate: Date,
+    },
+  ],
+  libraryIssues: [
+    {
+      bookId: String,
+      bookName: String,
+      bookIssueDate: Date,
+      bookReturnDate: Date,
+      fine: Number,
+    },
+  ],
   createdAt: { type: Date, default: new Date() },
   updatedAt: { type: Date, default: new Date() },
 });
