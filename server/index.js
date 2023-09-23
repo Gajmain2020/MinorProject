@@ -13,12 +13,7 @@ import facultyRoutes from "./Routes/facultyRoutes.js";
 
 const app = express();
 
-app.use(
-  cors({
-    origin: "http://localhost:3000", // Replace with your client's origin
-    credentials: true, // Allow cookies to be sent
-  })
-);
+app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static("files"));
