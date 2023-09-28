@@ -10,6 +10,7 @@ import dotenv from "dotenv";
 import adminRoutes from "./Routes/adminRoutes.js";
 import studentRoutes from "./Routes/studentRoutes.js";
 import facultyRoutes from "./Routes/facultyRoutes.js";
+import commonRoutes from "./Routes/commonRoutes.js";
 
 const app = express();
 
@@ -28,6 +29,7 @@ const server = http.createServer(app);
 app.use("/api/admin", adminRoutes);
 app.use("/api/student", studentRoutes);
 app.use("/api/faculty", facultyRoutes);
+app.use("/api/common", commonRoutes);
 
 mongoose.set({ strictQuery: true });
 mongoose.connect("mongodb://localhost:27017/MINOR-PROJECT").then(() => {

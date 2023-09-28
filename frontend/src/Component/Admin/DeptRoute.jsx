@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Library from "./Library/Library";
 import { useEffect } from "react";
 
-export default function DeptRoute() {
+export default function DeptRoute({ setToken, token }) {
   const location = useLocation().pathname.split("/")[2];
   const navigate = useNavigate();
   useEffect(() => {
@@ -15,7 +15,7 @@ export default function DeptRoute() {
   if (location === "Library") {
     return (
       <>
-        <Library />
+        <Library setToken={setToken} />
       </>
     );
   }

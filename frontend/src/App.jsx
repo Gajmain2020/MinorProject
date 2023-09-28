@@ -7,9 +7,13 @@ import AdminLogin from "./Component/Admin/Login";
 import Homepage from "./Component/Homepage/Homepage";
 import Navbar from "./Component/Navbar/Navbar";
 import Complaints from "./Component/Constants/Complaints";
+import Notfound from "./Component/Notfound/Notfound";
+import ShowData from "./Component/ShowData/ShowData";
+import IssueBook from "./Component/Admin/Library/Helper/IssueBook";
 
 function App() {
   const [token, setToken] = useState("");
+
   return (
     <>
       <div className="background_only"></div>
@@ -23,9 +27,15 @@ function App() {
             element={<AdminLogin token={token} setToken={setToken} />}
           />
           <Route path="/admin/:department/:id">
-            <Route path="" element={<DeptRoute />} />
+            <Route
+              path=""
+              element={<DeptRoute token={token} setToken={setToken} />}
+            />
+            <Route path="issue-book" element={<IssueBook />} />
           </Route>
           <Route path="/Contact" element={<>hello world</>} />
+          <Route path="/show-data/:data" element={<ShowData />} />
+          <Route path="*" element={<Notfound />} />
         </Routes>
       </div>
     </>

@@ -19,6 +19,7 @@ import {
   editBook,
   returnBooks,
 } from "../Controllers/adminControls.js";
+import { authAdmin } from "../middleware/authentication.js";
 
 const router = express.Router();
 
@@ -38,8 +39,8 @@ router.delete("/student/delete-students", deleteMultipleStudents);
 //! library Routes.... All require middleware to call and prorceed further ...
 router.get("/library/fetch-books", fetchBooks);
 router.get("/library/search-book", searchBook);
-router.post("/library/add-single-book", addSingleBook);
-router.post("/library/add-multiple-books", addMultipleBooks);
+router.post("/library/add-single-book", authAdmin, addSingleBook);
+router.post("/library/add-multiple-books", authAdmin, addMultipleBooks);
 router.post("/library/issue-books", issueBooks);
 router.patch("/library/edit-book", editBook);
 router.patch("/library/return-books", returnBooks);

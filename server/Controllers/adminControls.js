@@ -479,7 +479,7 @@ export const addSingleBook = async (req, res) => {
     if (isBookExisting) {
       return res
         .status(401)
-        .json({ message: `Book ${bookId} already exists`, successful: false });
+        .json({ message: `Book ${bookId} already exists`, success: false });
     }
     await Books.create({
       bookName,
@@ -527,12 +527,13 @@ export const addMultipleBooks = async (req, res) => {
     return res.status(200).json({
       data: { added, rejected },
       message: "Books Added Successfully",
-      successful: true,
+      success: true,
     });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Something went wrong", successful: false });
+    return res.status(500).json({
+      message: "Something went wrong. Please try again.",
+      success: false,
+    });
   }
 };
 export const issueBooks = async (req, res) => {

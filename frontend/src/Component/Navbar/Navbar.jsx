@@ -1,15 +1,21 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { Transition } from "@headlessui/react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import LOGO from "../../images/logo.png";
 import jwtDecode from "jwt-decode";
 
 export default function Navbar({ token, setToken }) {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-
+  const isShowData = useLocation().pathname.split("/")[1];
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    setToken(
+      localStorage.getItem("authToken") ? localStorage.getItem("authToken") : ""
+    );
+  }, [setToken]);
 
   useEffect(() => {
     if (token !== "") {
@@ -19,6 +25,10 @@ export default function Navbar({ token, setToken }) {
       }
     }
   }, [token, isOpen]);
+
+  if (isShowData === "show-data") {
+    return;
+  }
 
   function handleOptionClick(option) {
     navigate("/" + option);
@@ -71,18 +81,20 @@ export default function Navbar({ token, setToken }) {
                       </button>
                     ) : (
                       <>
-                        <span
-                          onClick={() => handleProfileClick()}
-                          className="w-10 h-10 cursor-pointer bg-cyan-500 rounded-full flex items-center justify-center text-white text-2xl font-semibold"
-                        >
-                          {user.name[0].toUpperCase()}
-                        </span>
-                        <button
-                          onClick={() => handleLogoutClick()}
-                          className="transition-all delay-150 ease-in-out bg-blue-200 text-black hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                        >
-                          Logout
-                        </button>
+                        <div className="flex gap-4">
+                          <span
+                            onClick={() => handleProfileClick()}
+                            className="w-10 h-10 cursor-pointer bg-cyan-500 rounded-full flex items-center justify-center text-white text-2xl font-semibold"
+                          >
+                            {user.name[0].toUpperCase()}
+                          </span>
+                          <button
+                            onClick={() => handleLogoutClick()}
+                            className="transition-all delay-150 ease-in-out bg-blue-200 text-black hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                          >
+                            Logout
+                          </button>
+                        </div>
                       </>
                     )}
                   </div>
