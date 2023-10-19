@@ -301,7 +301,7 @@ export default function AddBookBackdrop({
               </div>
               <div className="flex flex-col gap-4 w-4/5">
                 <div className="text-2xl text-center font-main text-gray-800">
-                  Add Multiple Books VIA CSV S
+                  Add Multiple Books VIA CSV Sheet
                 </div>
                 <div className="flex flex-col gap-4">
                   <div className="flex gap-3">

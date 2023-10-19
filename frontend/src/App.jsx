@@ -10,6 +10,8 @@ import Complaints from "./Component/Constants/Complaints";
 import Notfound from "./Component/Notfound/Notfound";
 import ShowData from "./Component/ShowData/ShowData";
 import IssueBook from "./Component/Admin/Library/Helper/IssueBook";
+import EditRemoveStudent from "./Component/Admin/Academic/Helpers/EditRemoveStudent";
+import EditRemoveTeachers from "./Component/Admin/Academic/Helpers/EditRemoveTeachers";
 
 function App() {
   const [token, setToken] = useState("");
@@ -30,6 +32,14 @@ function App() {
             <Route
               path=""
               element={<DeptRoute token={token} setToken={setToken} />}
+            />
+            <Route
+              path="edit-delete-students"
+              element={<EditRemoveStudent />}
+            />
+            <Route
+              path="edit-delete-teachers"
+              element={<EditRemoveTeachers />}
             />
             <Route path="issue-book" element={<IssueBook />} />
           </Route>

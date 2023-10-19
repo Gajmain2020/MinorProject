@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import Admin from "../models/admin.js";
 import Students from "../models/student.js";
 import Books from "../models/books.js";
+import Teachers from "../models/teacher.js";
 import { isValidObjectId } from "mongoose";
 
 // ** Admin Controllers **
@@ -197,6 +198,98 @@ export const updateAdmin = async (req, res) => {
   }
 };
 
+// ** Teachers Controllers ********************************
+export const fetchAllTeachers = async (req, res) => {
+  try {
+    const teachers = await Teachers.find();
+    const teacherData = teachers.map((teacher) => ({
+      name: teacher.name,
+      email: teacher.email,
+      department: teacher.department,
+      empId: teacher.empId,
+    }));
+    return res.status(200).json({
+      message: "Teachers data sent successfully.",
+      teachers: teacherData,
+      success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Something went wrong. Please try again later.",
+      success: false,
+    });
+  }
+};
+export const addIndividualTeacher = async (req, res) => {
+  try {
+    const data = req.body;
+
+    const isTeacherAlreadyExisting = await Teachers.findOne({
+      email: data.email,
+    });
+    const isEmpIdRegistered = await Teachers.findOne({ empId: data.empId });
+
+    if (isTeacherAlreadyExisting || isEmpIdRegistered) {
+      return res
+        .status(400)
+        .json({ message: "Email or EmpID elready exists.", success: false });
+    }
+    const password = await bcrypt.hash(data.email, 10);
+
+    await Teachers.create({
+      name: data.name,
+      email: data.email,
+      department: data.department,
+      empId: data.empId,
+      password,
+    });
+    return res
+      .status(200)
+      .json({ message: "Teacher added Successfully.", success: true });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error.message, success: false });
+  }
+};
+export const addMultipleTeachers = async (req, res) => {
+  try {
+    const added = [];
+    const rejected = [];
+    const teachers = req.body;
+
+    for (let i = 0; i < teachers.length; i++) {
+      console.log(teachers[i]);
+      const { urn, empId, name, dept, email } = teachers[i];
+
+      const studentAlreadyAdded = await Students.findOne({ urn });
+      if (studentAlreadyAdded) {
+        rejected.push(teachers[i]);
+        continue;
+      }
+      const encryptedPassword = await bcrypt.hash(email, 10);
+      await Teachers.create({
+        name,
+        empId,
+        password: encryptedPassword,
+        email,
+        department: dept,
+        profileComplete: false,
+      });
+      added.push(teachers[i]);
+    }
+    return res.status(200).json({
+      data: { added, rejected },
+      message: `Teachers Added Successfully. Out of ${teachers.length} - ${added.length} are Added and ${rejected.length} are Rejected.`,
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Something went wrong.", success: false });
+  }
+};
+
 // ** Student Controllers **
 export const addIndividualStudent = async (req, res) => {
   try {
@@ -212,6 +305,7 @@ export const addIndividualStudent = async (req, res) => {
         .status(400)
         .json({ message: "Email or URN elready exists.", success: false });
     }
+    console.log(data);
     const password = await bcrypt.hash(data.email, 10);
 
     await Students.create({
@@ -221,11 +315,13 @@ export const addIndividualStudent = async (req, res) => {
       phoneNumber: data.phoneNumber,
       urn: data.urn,
       password,
+      year: data.year,
     });
     return res
       .status(200)
       .json({ message: "Student added Successfully.", success: true });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ message: error.message, success: false });
   }
 };
@@ -234,7 +330,7 @@ export const addMultipleStudents = async (req, res) => {
   try {
     const added = [];
     const rejected = [];
-    const students = req.body.students;
+    const students = req.body;
 
     for (let i = 0; i < students.length; i++) {
       const { urn, phoneNumber, name, section, semester, department, email } =
@@ -250,10 +346,10 @@ export const addMultipleStudents = async (req, res) => {
         name,
         urn,
         password: encryptedPassword,
-        phoneNumber,
         email,
         department,
         semester,
+        profileComplete: false,
       });
       added.push(students[i]);
     }
@@ -271,7 +367,7 @@ export const addMultipleStudents = async (req, res) => {
 
 export const fetchAllStudents = async (req, res) => {
   try {
-    const students = await Students.find().limit(60);
+    const students = await Students.find();
     const studentData = students.map((student) => ({
       name: student.name,
       email: student.email,
@@ -295,9 +391,9 @@ export const fetchAllStudents = async (req, res) => {
 
 export const deleteSingleStudent = async (req, res) => {
   try {
-    const id = req.params.id;
+    const urn = req.params.urn;
 
-    await Students.findByIdAndRemove(id);
+    await Students.findOneAndDelete({ urn });
 
     return res.status(200).json({
       success: true,
@@ -337,53 +433,35 @@ export const deleteMultipleStudents = async (req, res) => {
 
 export const updateSingleStudent = async (req, res) => {
   try {
-    const { student, modifiedStudent } = req.body;
-
-    const stu = await Students.findOne({
-      urn: student.urn,
-      email: student.email,
-    });
-
-    if (
-      (await Students.findOne({
-        urn: modifiedStudent.urn,
-      })) &&
-      stu.urn !== modifiedStudent.urn
-    ) {
-      return res.status(405).json({
-        success: false,
-        message: `Student with roll number '${modifiedStudent.urn}' or email '${modifiedStudent.email}' already exists in DB.`,
+    console.log(req.body);
+    const data = req.body;
+    if (data.oldEmail === data.email) {
+      delete data.oldEmail;
+      await Students.findOneAndUpdate(
+        { urn: data.urn },
+        { ...data, updatedAt: new Date() }
+      );
+      return res.status(200).json({
+        message: `Student with URN ${data.urn} updated successfully.`,
+        success: true,
       });
     }
-    if (
-      (await Students.findOne({
-        email: modifiedStudent.email,
-      })) &&
-      stu.email !== modifiedStudent.email
-    ) {
-      return res.status(405).json({
+    //check for email to already existance
+    const emailExists = await Students.findOne({ email: data.email });
+    if (emailExists) {
+      return res.status(403).json({
+        message: `Student with Email ${data.email} already exists in database.`,
         success: false,
-        message: `Student with roll number '${modifiedStudent.rollNumber}' or email '${modifiedStudent.email}' already exists in DB.`,
       });
     }
-
-    stu.name = modifiedStudent.name;
-    stu.email = modifiedStudent.email;
-    stu.phoneNumber = modifiedStudent.phoneNumber;
-    stu.urn = modifiedStudent.urn;
-    stu.semester = modifiedStudent.semester;
-    stu.department = modifiedStudent.department;
-    stu.updatedAt = new Date();
-
-    const newPass = await bcrypt.hash(modifiedStudent.email, 10);
-
-    stu.password = newPass;
-
-    stu.save();
-
+    delete data.oldEmail;
+    await Students.findOneAndUpdate(
+      { urn: data.urn },
+      { ...data, updatedAt: new Date() }
+    );
     return res.status(200).json({
+      message: `Student with URN ${data.urn} updated successfully.`,
       success: true,
-      message: "Successfully updated student.",
     });
   } catch (error) {
     return res.status(500).json({
@@ -417,6 +495,18 @@ export const updateMultipleStudent = async (req, res) => {
       }.`,
       success: "true",
     });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Something went wrong. Please try again.",
+      success: false,
+    });
+  }
+};
+export const getStudentDetails = async (req, res) => {
+  try {
+    const urn = req.params.urn;
+    const student = await Students.findOne({ urn });
+    console.log(student);
   } catch (error) {
     return res.status(500).json({
       message: "Something went wrong. Please try again.",
@@ -636,6 +726,27 @@ export const editBook = async (req, res) => {
     return res
       .status(200)
       .json({ successful: true, message: "Book Updated Successfully" });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Something went wrong", successful: false });
+  }
+};
+
+export const getBookDetails = async (req, res) => {
+  try {
+    const bookId = req.query.bookId;
+
+    const book = await Books.findOne({ bookId });
+
+    if (!book) {
+      return res.status(404).json({ error: "Book not found", success: false });
+    }
+    return res.status(200).json({
+      message: "Book found and sent successfully.",
+      book,
+      success: true,
+    });
   } catch (error) {
     return res
       .status(500)

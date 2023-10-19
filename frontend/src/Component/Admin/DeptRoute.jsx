@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import Library from "./Library/Library";
 import { useEffect } from "react";
+import Academic from "./Academic/Academic";
 
 export default function DeptRoute({ setToken, token }) {
   const location = useLocation().pathname.split("/")[2];
@@ -16,6 +17,13 @@ export default function DeptRoute({ setToken, token }) {
     return (
       <>
         <Library setToken={setToken} />
+      </>
+    );
+  }
+  if (location === "Academics") {
+    return (
+      <>
+        <Academic setToken={setToken} />
       </>
     );
   }
