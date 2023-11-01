@@ -12,6 +12,10 @@ import ShowData from "./Component/ShowData/ShowData";
 import IssueBook from "./Component/Admin/Library/Helper/IssueBook";
 import EditRemoveStudent from "./Component/Admin/Academic/Helpers/EditRemoveStudent";
 import EditRemoveTeachers from "./Component/Admin/Academic/Helpers/EditRemoveTeachers";
+import CourseManagement from "./Component/Admin/AcademicDepartment/Helper/CourseManagement";
+import AssignTgToStudent from "./Component/Admin/AcademicDepartment/Helper/AssignTgToStudent";
+import AssignTG from "./Component/Admin/AcademicDepartment/Helper/AssignTG";
+import TimeTableManagement from "./Component/Admin/AcademicDepartment/Helper/TimeTableManagement";
 
 function App() {
   const [token, setToken] = useState("");
@@ -32,6 +36,24 @@ function App() {
             <Route
               path=""
               element={<DeptRoute token={token} setToken={setToken} />}
+            />
+            <Route
+              path="course-management"
+              element={<CourseManagement token={token} setToken={setToken} />}
+            />
+            <Route
+              path="time-table-management"
+              element={
+                <TimeTableManagement token={token} setToken={setToken} />
+              }
+            />
+            <Route
+              path="assign-tg"
+              element={<AssignTG token={token} setToken={setToken} />}
+            />
+            <Route
+              path="assign-tg-to-students"
+              element={<AssignTgToStudent token={token} setToken={setToken} />}
             />
             <Route
               path="edit-delete-students"

@@ -160,11 +160,12 @@ export async function fetchAllStudents() {
     return error.response.data;
   }
 }
-export async function fetchAllTeachers() {
+export async function fetchAllTeachers(dept) {
+  console.log(dept);
   try {
     const response = await axios({
       headers,
-      url: academicUrl + "/fetch-teachers",
+      url: academicUrl + `/fetch-teachers`,
       method: "GET",
     });
     return response.data;
@@ -190,6 +191,47 @@ export async function deleteMultipleStudents(data) {
     const response = await axios({
       headers,
       url: academicUrl + `/delete-students`,
+      method: "DELETE",
+      data,
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export async function editSingleTeacher(data) {
+  try {
+    const response = await axios({
+      headers,
+      url: academicUrl + "/update-teacher",
+      data,
+      method: "PATCH",
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export async function deleteSingleTeacher(data) {
+  try {
+    const response = await axios({
+      headers,
+      url: academicUrl + `/delete-teacher/${data.empId}`,
+      method: "DELETE",
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export async function deleteMultipleTeachers(data) {
+  try {
+    const response = await axios({
+      headers,
+      url: academicUrl + "/delete-teachers",
       method: "DELETE",
       data,
     });

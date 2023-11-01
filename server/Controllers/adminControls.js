@@ -220,6 +220,44 @@ export const fetchAllTeachers = async (req, res) => {
     });
   }
 };
+export const updateSingleTeacher = async (req, res) => {
+  try {
+    const data = req.body;
+    if (data.oldEmail === data.email) {
+      delete data.oldEmail;
+      await Teachers.findOneAndUpdate(
+        { empId: data.empId },
+        { ...data, updatedAt: new Date() }
+      );
+      return res.status(200).json({
+        message: `Teacher with Emp ID ${data.empId} updated successfully.`,
+        success: true,
+      });
+    }
+    //check for email to already existance
+    const emailExists = await Teachers.findOne({ email: data.email });
+    if (emailExists) {
+      return res.status(403).json({
+        message: `Teacher with Email ${data.email} already exists in database.`,
+        success: false,
+      });
+    }
+    delete data.oldEmail;
+    await Teachers.findOneAndUpdate(
+      { urn: data.urn },
+      { ...data, updatedAt: new Date() }
+    );
+    return res.status(200).json({
+      message: `Teacher with Emp ID ${data.empId} updated successfully.`,
+      success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Something went wrong. Please try again later.",
+      success: false,
+    });
+  }
+};
 export const addIndividualTeacher = async (req, res) => {
   try {
     const data = req.body;
@@ -289,6 +327,47 @@ export const addMultipleTeachers = async (req, res) => {
       .json({ message: "Something went wrong.", success: false });
   }
 };
+export const deleteSingleTeacher = async (req, res) => {
+  try {
+    const empId = req.params.empId;
+
+    await Teachers.findOneAndDelete({ empId });
+
+    return res.status(200).json({
+      success: true,
+      message: "Successfully deleted teacher.",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Something went wrong. Please try again.",
+      success: false,
+    });
+  }
+};
+
+export const deleteMultipleTeacher = async (req, res) => {
+  try {
+    const teachers = req.body;
+
+    for (let i = 0; i < teachers.length; i++) {
+      await Teachers.findOneAndDelete({
+        email: teachers[i].email,
+        urn: teachers[i].urn,
+      });
+    }
+    return res.status(200).json({
+      message: `Successfully removed ${teachers.length} teacher${
+        teachers.length > 1 && "s"
+      }.`,
+      success: "true",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Something went wrong. Please try again.",
+      success: false,
+    });
+  }
+};
 
 // ** Student Controllers **
 export const addIndividualStudent = async (req, res) => {
@@ -331,9 +410,8 @@ export const addMultipleStudents = async (req, res) => {
     const added = [];
     const rejected = [];
     const students = req.body;
-
     for (let i = 0; i < students.length; i++) {
-      const { urn, phoneNumber, name, section, semester, department, email } =
+      const { urn, name, section, crn, semester, department, email } =
         students[i];
 
       const studentAlreadyAdded = await Students.findOne({ urn });
@@ -350,6 +428,8 @@ export const addMultipleStudents = async (req, res) => {
         department,
         semester,
         profileComplete: false,
+        section,
+        crn: section + "-" + crn,
       });
       added.push(students[i]);
     }
@@ -433,7 +513,6 @@ export const deleteMultipleStudents = async (req, res) => {
 
 export const updateSingleStudent = async (req, res) => {
   try {
-    console.log(req.body);
     const data = req.body;
     if (data.oldEmail === data.email) {
       delete data.oldEmail;

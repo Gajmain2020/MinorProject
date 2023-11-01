@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { fetchAllTeachers } from "../../../../../api/admin";
+import {
+  deleteMultipleTeachers,
+  deleteSingleTeacher,
+  editSingleTeacher,
+  fetchAllTeachers,
+} from "../../../../../api/admin";
 import {
   Alert,
   Snackbar,
@@ -34,7 +39,7 @@ export default function EditRemoveTeachers() {
   const [check, setCheck] = useState(null);
 
   useState(() => {
-    document.title = "Edit Remove teachers";
+    document.title = "Edit Remove Teachers";
 
     fetchAllTeachers().then((res) => {
       if (!res.success) {
@@ -50,7 +55,7 @@ export default function EditRemoveTeachers() {
     setTeacher(row);
     setCheck(row);
   }
-  function handleEditSingleteacher() {
+  function handleEditSingleTeacher() {
     if (teacher === check) {
       const confirmClose = window.confirm(
         "No change detected. Do you want to close modal?"
@@ -62,16 +67,16 @@ export default function EditRemoveTeachers() {
       }
       return;
     }
-    // editSingleteacher({ ...teacher, oldEmail: check.email }).then((res) => {
-    //   if (!res.success) {
-    //     setErrorMessage(res.message);
-    //     return;
-    //   }
-    //   setSuccessMessage(res.message);
-    //   const idx = teachers.indexOf(check);
-    //   teachers[idx] = teacher;
-    //   setTeacher(null);
-    // });
+    editSingleTeacher({ ...teacher, oldEmail: check.email }).then((res) => {
+      if (!res.success) {
+        setErrorMessage(res.message);
+        return;
+      }
+      setSuccessMessage(res.message);
+      const idx = teachers.indexOf(check);
+      teachers[idx] = teacher;
+      setTeacher(null);
+    });
   }
   function handleSelectAll(e) {
     if (e.target.checked) {
@@ -85,7 +90,9 @@ export default function EditRemoveTeachers() {
       setSelectedTeachers((prev) => [...prev, row]);
       return;
     }
-    setSelectedTeachers((prev) => prev.filter((stu) => stu.urn !== row.urn));
+    setSelectedTeachers((prev) =>
+      prev.filter((stu) => stu.empId !== row.empId)
+    );
   }
   function handleMultipleDelete() {
     const confirmDelete = window.confirm(
@@ -94,17 +101,17 @@ export default function EditRemoveTeachers() {
     if (!confirmDelete) {
       return;
     }
-    // deleteMultipleteachers(selectedTeachers).then((res) => {
-    //   if (!res.success) {
-    //     setErrorMessage(res.message);
-    //     return;
-    //   }
-    //   setSuccessMessage(res.message);
-    //   setTeachers((prev) =>
-    //     prev.filter((stu) => !selectedTeachers.includes(stu))
-    //   );
-    //   setSelectedTeachers([]);
-    // });
+    deleteMultipleTeachers(selectedTeachers).then((res) => {
+      if (!res.success) {
+        setErrorMessage(res.message);
+        return;
+      }
+      setSuccessMessage(res.message);
+      setTeachers((prev) =>
+        prev.filter((stu) => !selectedTeachers.includes(stu))
+      );
+      setSelectedTeachers([]);
+    });
   }
   function handleSingleDeleteClick(row) {
     const confirmDelete = window.confirm(
@@ -112,22 +119,22 @@ export default function EditRemoveTeachers() {
     );
     if (confirmDelete) {
       // make api call to delete single teacher
-      // deleteSingleteacher(row)
-      //   .then((res) => {
-      //     if (!res.success) {
-      //       setErrorMessage(res.message);
-      //       return;
-      //     }
-      //     setSuccessMessage(res.message);
-      //     setSelectedTeachers((prev) =>
-      //       prev.filter((stu) => stu.urn !== row.urn)
-      //     );
-      //     setTeachers((prev) => prev.filter((stu) => stu.urn !== row.urn));
-      //     return;
-      //   })
-      //   .catch((err) => {
-      //     setErrorMessage(err.message);
-      //   });
+      deleteSingleTeacher(row)
+        .then((res) => {
+          if (!res.success) {
+            setErrorMessage(res.message);
+            return;
+          }
+          setSuccessMessage(res.message);
+          setSelectedTeachers((prev) =>
+            prev.filter((stu) => stu.urn !== row.urn)
+          );
+          setTeachers((prev) => prev.filter((stu) => stu.empId !== row.empId));
+          return;
+        })
+        .catch((err) => {
+          setErrorMessage(err.message);
+        });
     }
   }
 
@@ -276,7 +283,7 @@ export default function EditRemoveTeachers() {
             }}
             open={open}
           >
-            <div className="w-1/2 sm:w-4/5 xs:w-4/5 p-10 rounded-lg lg:h-4/6 sm:h-2/3 xs:h-2/3 relative flex-nowrap bg-gray-200/90 flex justify-center items-center gap-10 sm:flex-wrap xs:flex-wrap">
+            <div className="w-1/2 sm:w-4/5 xs:w-4/5 p-10 rounded-lg lg:h-3/5 sm:h-2/3 xs:h-2/3 relative flex-nowrap bg-gray-200/90 flex justify-center items-center gap-10 sm:flex-wrap xs:flex-wrap">
               <div className="absolute top-1 right-1">
                 <Button
                   onClick={() => setTeacher(null)}
@@ -289,9 +296,9 @@ export default function EditRemoveTeachers() {
               </div>
               <div className="flex w-full h-full flex-col gap-3">
                 <TextField
-                  label="URN"
+                  label="Emp ID"
                   disabled
-                  value={teacher?.urn}
+                  value={teacher?.empId}
                   name="urn"
                   fullWidth
                 />
@@ -338,28 +345,10 @@ export default function EditRemoveTeachers() {
                     </MenuItem>
                   ))}
                 </TextField>
-                <TextField
-                  select
-                  label="Semester"
-                  value={teacher?.semester}
-                  onChange={(e) =>
-                    setTeacher((prev) => ({
-                      ...prev,
-                      [e.target.name]: e.target.value,
-                    }))
-                  }
-                  name="semester"
-                  fullWidth
-                >
-                  {semester.map((y) => (
-                    <MenuItem value={y} key={y}>
-                      {y}
-                    </MenuItem>
-                  ))}
-                </TextField>
+
                 <div className="flex gap-3">
                   <Button
-                    onClick={handleEditSingleteacher}
+                    onClick={handleEditSingleTeacher}
                     color="success"
                     fullWidth
                     variant="contained"

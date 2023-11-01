@@ -11,6 +11,10 @@ const studentSchema = mongoose.Schema({
   phoneNumber: String,
   year: String,
   semester: String,
+  section: String,
+  crn: String,
+  TG: { type: String, default: "" },
+  isVerified: { type: Boolean, default: false },
   libraryCurrentIssues: [
     {
       bookId: String,

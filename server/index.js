@@ -11,6 +11,7 @@ import adminRoutes from "./Routes/adminRoutes.js";
 import studentRoutes from "./Routes/studentRoutes.js";
 import facultyRoutes from "./Routes/facultyRoutes.js";
 import commonRoutes from "./Routes/commonRoutes.js";
+import deptAdminRoutes from "./Routes/deptAdminRoutes.js";
 
 const app = express();
 
@@ -30,6 +31,8 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/student", studentRoutes);
 app.use("/api/faculty", facultyRoutes);
 app.use("/api/common", commonRoutes);
+app.use("/api/:dept", deptAdminRoutes);
+app.use("/api/department", deptAdminRoutes);
 
 mongoose.set({ strictQuery: true });
 mongoose.connect("mongodb://localhost:27017/MINOR-PROJECT").then(() => {

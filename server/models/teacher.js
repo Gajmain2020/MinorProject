@@ -16,6 +16,8 @@ const teacherSchema = mongoose.Schema({
       semester: String,
       year: String,
       department: String,
+      section: String,
+      classRollNumber: String,
       email: String,
     },
   ],
@@ -25,6 +27,7 @@ const teacherSchema = mongoose.Schema({
       semester: String,
     },
   ],
+  isTG: { type: Boolean, default: false },
   createdAt: { type: Date, default: new Date() },
   updatedAt: { type: Date, default: new Date() },
 });
