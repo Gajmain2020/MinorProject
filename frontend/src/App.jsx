@@ -16,6 +16,9 @@ import CourseManagement from "./Component/Admin/AcademicDepartment/Helper/Course
 import AssignTgToStudent from "./Component/Admin/AcademicDepartment/Helper/AssignTgToStudent";
 import AssignTG from "./Component/Admin/AcademicDepartment/Helper/AssignTG";
 import TimeTableManagement from "./Component/Admin/AcademicDepartment/Helper/TimeTableManagement";
+import StudentHomepage from "./Component/Student/StudentHomepage";
+import TeacherHomepage from "./Component/Teacher/TeacherHomepage";
+import ValidateStudents from "./Component/Teacher/Helper/ValidateStudents";
 
 function App() {
   const [token, setToken] = useState("");
@@ -26,7 +29,10 @@ function App() {
       <Navbar token={token} setToken={setToken} />
       <div className="flex justify-center mb-10">
         <Routes>
-          <Route path="/" element={<Homepage token={token} />} />
+          <Route
+            path="/"
+            element={<Homepage token={token} setToken={setToken} />}
+          />
           <Route path="/complaint" element={<Complaints token={token} />} />
           <Route
             path="/admin-login"
@@ -64,6 +70,22 @@ function App() {
               element={<EditRemoveTeachers />}
             />
             <Route path="issue-book" element={<IssueBook />} />
+          </Route>
+          <Route path="/teacher/:department/:id">
+            <Route
+              path=""
+              element={<TeacherHomepage token={token} setToken={setToken} />}
+            />
+            <Route
+              path="validate-students"
+              element={<ValidateStudents token={token} setToken={setToken} />}
+            />
+          </Route>
+          <Route path="/student/:department/:id">
+            <Route
+              path=""
+              element={<StudentHomepage token={token} setToken={setToken} />}
+            />
           </Route>
           <Route path="/Contact" element={<>hello world</>} />
           <Route path="/show-data/:data" element={<ShowData />} />

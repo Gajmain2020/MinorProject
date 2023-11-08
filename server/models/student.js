@@ -14,6 +14,20 @@ const studentSchema = mongoose.Schema({
   section: String,
   crn: String,
   TG: { type: String, default: "" },
+  detailsFilled: { type: Boolean, default: false },
+  details: {
+    dob: Date,
+    bloodGroup: String,
+    admissionNumber: String,
+    gender: String,
+    studentMobileNumeber: String,
+    guardianMobileNumber1: String,
+    guardianMobileNumber2: String,
+    aadharNumber: String,
+    category: String,
+    permanentAddress: String,
+    profilePhoto: String,
+  },
   isVerified: { type: Boolean, default: false },
   libraryCurrentIssues: [
     {

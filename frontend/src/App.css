@@ -2,6 +2,21 @@ body {
   background-color: black;
 }
 
+::-webkit-datetime-edit {
+  color: transparent;
+}
+:focus::-webkit-datetime-edit {
+  color: #000;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
 .background_only {
   background: url(./images/mainbackground.jpg);
   background-position: center center;

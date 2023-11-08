@@ -16,9 +16,12 @@ const teacherSchema = mongoose.Schema({
       semester: String,
       year: String,
       department: String,
+      crn: String,
       section: String,
       classRollNumber: String,
       email: String,
+      detailsFilled: { type: Boolean, default: false },
+      isVerified: { type: Boolean, default: false },
     },
   ],
   subjectsTaken: [

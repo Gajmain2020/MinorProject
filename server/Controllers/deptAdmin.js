@@ -229,14 +229,9 @@ export const assignTgToStudent = async (req, res) => {
       const prevTGInDB = await Teachers.findOne({
         empId: prevTG.split("-")[1],
       });
-      let indToRemove;
-      for (let i = 0; i < prevTGInDB.TGOf.length; i++) {
-        if (student.urn === prevTGInDB.TGOf[i].urn) {
-          indToRemove = i - 1;
-          break;
-        }
-      }
-      prevTGInDB.TGOf = prevTGInDB.TGOf.splice(indToRemove, 1);
+      const temp = prevTGInDB.TGOf;
+      prevTGInDB.TGOf = [];
+      prevTGInDB.TGOf = temp.filter((st) => st.urn !== student.urn);
       await prevTGInDB.save();
     }
 
@@ -259,6 +254,7 @@ export const assignTgToStudent = async (req, res) => {
       email: student.email,
       department: student.department,
       urn: student.urn,
+      crn: student.crn,
       section: student.section,
       classRollNumber: student.classRollNumber,
       semester: student.semester,

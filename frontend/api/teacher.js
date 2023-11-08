@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const studentUrl = "http://localhost:3001/api/student";
+const teacherUrl = "http://localhost:3001/api/teacher";
 
 const headers = {
   "content-type": "application/json",
@@ -13,35 +13,11 @@ const headers = {
       : "",
 };
 
-export async function getStudentDetails(urn) {
+export async function loginTeacher(data) {
   try {
     const response = await axios({
       headers,
-      url: studentUrl + `/get-details?urn=${urn}`,
-      method: "GET",
-    });
-    return response.data;
-  } catch (error) {
-    return error.response.data;
-  }
-}
-export async function fetchStudentDetails(urn) {
-  try {
-    const response = await axios({
-      headers,
-      url: studentUrl + `/fetch-details?urn=${urn}`,
-      method: "GET",
-    });
-    return response.data;
-  } catch (error) {
-    return error.response.data;
-  }
-}
-export async function loginStudent(data) {
-  try {
-    const response = await axios({
-      headers,
-      url: studentUrl + "/login",
+      url: teacherUrl + "/login",
       method: "POST",
       data,
     });
@@ -50,12 +26,37 @@ export async function loginStudent(data) {
     return error.response.data;
   }
 }
-
-export async function saveStudentDetails(data) {
+export async function fetchStudentsByTG(data) {
   try {
     const response = await axios({
       headers,
-      url: studentUrl + "/save-details",
+      url: teacherUrl + `/fetch-student-tg/${data}`,
+      method: "GET",
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export async function verifyMultipleStudents(data) {
+  try {
+    const response = await axios({
+      headers,
+      url: teacherUrl + "/validate-students",
+      method: "PATCH",
+      data,
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+export async function verifySingleStudent(data) {
+  try {
+    const response = await axios({
+      headers,
+      url: teacherUrl + "/validate-student",
       method: "PATCH",
       data,
     });

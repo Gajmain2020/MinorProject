@@ -9,7 +9,7 @@ import dotenv from "dotenv";
 //importing routes from Routes
 import adminRoutes from "./Routes/adminRoutes.js";
 import studentRoutes from "./Routes/studentRoutes.js";
-import facultyRoutes from "./Routes/facultyRoutes.js";
+import teacherRoutes from "./Routes/teacherRoutes.js";
 import commonRoutes from "./Routes/commonRoutes.js";
 import deptAdminRoutes from "./Routes/deptAdminRoutes.js";
 
@@ -29,7 +29,7 @@ const server = http.createServer(app);
 //use routes for different api calls
 app.use("/api/admin", adminRoutes);
 app.use("/api/student", studentRoutes);
-app.use("/api/faculty", facultyRoutes);
+app.use("/api/teacher", teacherRoutes);
 app.use("/api/common", commonRoutes);
 app.use("/api/:dept", deptAdminRoutes);
 app.use("/api/department", deptAdminRoutes);
