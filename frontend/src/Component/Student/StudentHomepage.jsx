@@ -8,7 +8,11 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { fetchStudentDetails, saveStudentDetails } from "../../../api/student";
+import {
+  fetchStudentDetails,
+  fetchStudentDetailsById,
+  saveStudentDetails,
+} from "../../../api/student";
 import user from "../../images/user.png";
 
 const states = [
@@ -77,7 +81,7 @@ export default function StudentHomepage() {
   const [image, setImage] = useState("");
 
   useEffect(() => {
-    fetchStudentDetails(id)
+    fetchStudentDetailsById(id)
       .then((res) => {
         if (!res.success) {
           setErrorMessage(res.message);

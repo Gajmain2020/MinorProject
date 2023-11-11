@@ -102,13 +102,41 @@ export const fetchStudentDetails = async (req, res) => {
     });
   }
 };
+export const fetchStudentDetailsById = async (req, res) => {
+  try {
+    const id = req.query.id;
+    const studentInDB = await Students.findById(id);
+    if (!studentInDB) {
+      return res.status(404).json({
+        message: "Student with given ID is not found. Please try again.",
+        success: false,
+      });
+    }
+    return res.status(200).json({
+      message: "Student with given ID is found.",
+      student: studentInDB,
+      success: true,
+    });
+  } catch (error) {
+    console.log("Database Error: " + error);
+    return res.status(500).json({
+      message: "Something went wrong. Please try again.",
+      success: false,
+    });
+  }
+};
 
 export const saveStudentDetails = async (req, res) => {
   try {
     const { image, details, student } = req.body;
     const studentInDB = await Students.findById(student._id);
     studentInDB.detailsFilled = true;
-    studentInDB.details = { ...details, profilePhoto: image };
+    studentInDB.details = {
+      ...details,
+      permanentAddress:
+        details.permanentAddress + "-" + details.state + "-" + details.pinCode,
+      profilePhoto: image,
+    };
     await studentInDB.save();
 
     const tg = studentInDB.TG;

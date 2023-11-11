@@ -131,3 +131,57 @@ export async function assignSingleStudentTG(data) {
     return error.response.data;
   }
 }
+
+export async function addSingleCourse(data) {
+  try {
+    const response = await axios({
+      headers,
+      url: URL_2 + "add-course",
+      method: "POST",
+      data,
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export async function fetchCoursesByDept(dept) {
+  try {
+    const response = await axios({
+      headers,
+      url: URL_2 + `fetch-courses?dept=${dept}`,
+      method: "GET",
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export async function deleteSingleCourse(courseId) {
+  try {
+    const response = await axios({
+      headers,
+      url: URL_2 + `delete-course?courseId=${courseId}`,
+      method: "DELETE",
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export async function editSingleCourse(course) {
+  try {
+    const response = await axios({
+      headers,
+      url: URL_2 + `edit-course`,
+      method: "PATCH",
+      data: course,
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}

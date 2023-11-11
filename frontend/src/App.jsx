@@ -19,6 +19,8 @@ import TimeTableManagement from "./Component/Admin/AcademicDepartment/Helper/Tim
 import StudentHomepage from "./Component/Student/StudentHomepage";
 import TeacherHomepage from "./Component/Teacher/TeacherHomepage";
 import ValidateStudents from "./Component/Teacher/Helper/ValidateStudents";
+import AddTeachersToCourses from "./Component/Admin/AcademicDepartment/Helper/AddTeachersToCourses";
+import ViewEditCourses from "./Component/Admin/AcademicDepartment/Helper/ViewEditCourses";
 
 function App() {
   const [token, setToken] = useState("");
@@ -43,10 +45,17 @@ function App() {
               path=""
               element={<DeptRoute token={token} setToken={setToken} />}
             />
-            <Route
-              path="course-management"
-              element={<CourseManagement token={token} setToken={setToken} />}
-            />
+            <Route path="course-management">
+              <Route
+                path=""
+                element={<CourseManagement token={token} setToken={setToken} />}
+              />
+              <Route path="edit-course" element={<ViewEditCourses />} />
+              <Route
+                path="add-teachers-to-courses"
+                element={<AddTeachersToCourses />}
+              />
+            </Route>
             <Route
               path="time-table-management"
               element={

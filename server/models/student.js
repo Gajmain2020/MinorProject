@@ -20,7 +20,7 @@ const studentSchema = mongoose.Schema({
     bloodGroup: String,
     admissionNumber: String,
     gender: String,
-    studentMobileNumeber: String,
+    studentMobileNumber: String,
     guardianMobileNumber1: String,
     guardianMobileNumber2: String,
     aadharNumber: String,

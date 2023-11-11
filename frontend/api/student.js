@@ -37,6 +37,18 @@ export async function fetchStudentDetails(urn) {
     return error.response.data;
   }
 }
+export async function fetchStudentDetailsById(id) {
+  try {
+    const response = await axios({
+      headers,
+      url: studentUrl + `/fetch-details-by-id?id=${id}`,
+      method: "GET",
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
 export async function loginStudent(data) {
   try {
     const response = await axios({

@@ -296,7 +296,6 @@ export const addMultipleTeachers = async (req, res) => {
     const teachers = req.body;
 
     for (let i = 0; i < teachers.length; i++) {
-      console.log(teachers[i]);
       const { urn, empId, name, dept, email } = teachers[i];
 
       const studentAlreadyAdded = await Students.findOne({ urn });
@@ -384,7 +383,6 @@ export const addIndividualStudent = async (req, res) => {
         .status(400)
         .json({ message: "Email or URN elready exists.", success: false });
     }
-    console.log(data);
     const password = await bcrypt.hash(data.email, 10);
 
     await Students.create({
@@ -439,6 +437,7 @@ export const addMultipleStudents = async (req, res) => {
       success: true,
     });
   } catch (error) {
+    console.log(`errror: ${error.message}`);
     return res
       .status(500)
       .json({ message: "Something went wrong", success: false });
@@ -585,7 +584,6 @@ export const getStudentDetails = async (req, res) => {
   try {
     const urn = req.params.urn;
     const student = await Students.findOne({ urn });
-    console.log(student);
   } catch (error) {
     return res.status(500).json({
       message: "Something went wrong. Please try again.",

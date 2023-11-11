@@ -9,6 +9,10 @@ import {
   fetchDeptTGs,
   assignTgToStudent,
   assignTgToStudents,
+  addCourse,
+  fetchCoursesByDept,
+  deleteCourse,
+  editCourse,
 } from "../Controllers/deptAdmin.js";
 
 const router = express.Router();
@@ -26,6 +30,13 @@ router.patch("/remove-multiple-tg", removeMultipleTG);
 router.get("/fetch-students/:dept", fetchDeptStudents);
 router.patch("/assign-student-to-tg", assignTgToStudent);
 router.patch("/assign-students-to-tg", assignTgToStudents);
+//! ___________________________________________________________________________________
+//! Course and Time table routing _______________________________________________________________
+router.get("/fetch-courses", fetchCoursesByDept);
+router.post("/add-course", addCourse);
+router.delete("/delete-course", deleteCourse);
+router.patch("/edit-course", editCourse);
+
 //! ___________________________________________________________________________________
 
 export default router;

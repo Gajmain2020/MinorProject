@@ -1,5 +1,6 @@
 import Teachers from "../models/teacher.js";
 import Students from "../models/student.js";
+import Courses from "../models/course.model.js";
 
 //! TG CONTROLLER
 export const fetchDeptTeacher = async (req, res) => {
@@ -273,6 +274,112 @@ export const assignTgToStudent = async (req, res) => {
     return res.status(500).json({
       message: "Something went wrong. Please try again.",
       success: false,
+    });
+  }
+};
+
+//!! course controllers
+export const addCourse = async (req, res) => {
+  try {
+    const data = req.body;
+    const courseExisting = await Courses.findOne({
+      courseCode: data.courseCode,
+    });
+
+    if (courseExisting) {
+      return res.status(403).json({
+        message: `Course with code ${data.courseCode} already exists in the database.`,
+        success: false,
+      });
+    }
+    await Courses.create({ ...data });
+    return res.status(200).json({
+      message: `Course with code ${data.courseCode} has been added successfully.`,
+      success: true,
+    });
+  } catch (error) {
+    console.error("SERVER ERROR", error);
+    return res.status(500).json({
+      message: "Something went wrong. Please try again.",
+      success: false,
+    });
+  }
+};
+
+export const fetchCoursesByDept = async (req, res) => {
+  try {
+    const dept = req.query.dept;
+    const courses = await Courses.find({ department: dept });
+    return res.status(200).json({
+      message: "Courses Sent Successfully.",
+      courses,
+      success: true,
+    });
+  } catch (error) {
+    console.log("SERVER ERROR", error);
+    return res.status(500).json({
+      message: "Something went wrong. Please try again.",
+      success: false,
+    });
+  }
+};
+
+export const deleteCourse = async (req, res) => {
+  try {
+    const id = req.query.courseId;
+    const course = await Courses.findByIdAndDelete(id);
+    return res.status(200).json({
+      success: true,
+      message: `${course.courseName} course deleted successfully.`,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong. Please try again.",
+    });
+  }
+};
+
+export const editCourse = async (req, res) => {
+  try {
+    const course = req.body;
+    const courseInDB = await Courses.findByIdAndUpdate(course._id);
+    if (course.courseCode !== courseInDB.courseCode) {
+      const isCourseCodeTaken = await Courses.findOne({
+        courseCode: course.courseCode,
+      });
+      if (isCourseCodeTaken) {
+        return res.status(403).json({
+          success: false,
+          message: `Course ${course.courseCode} is already existing in database. Try different Course Code.`,
+        });
+      }
+      courseInDB.courseCode = course.courseCode;
+      courseInDB.courseName = course.courseName;
+      courseInDB.courseShortName = course.courseShortName;
+      courseInDB.semester = course.semester;
+      courseInDB.updatedAt = new Date();
+      await courseInDB.save();
+      return res.status(200).json({
+        success: true,
+        message: `Course ${course.courseCode} has been updated successfully.`,
+      });
+    }
+    if (course.courseCode === courseInDB.courseCode) {
+      courseInDB.courseName = course.courseName;
+      courseInDB.courseShortName = course.courseShortName;
+      courseInDB.semester = course.semester;
+      courseInDB.updatedAt = new Date();
+      await courseInDB.save();
+      return res.status(200).json({
+        success: true,
+        message: `Course ${course.courseCode} has been updated successfully.`,
+      });
+    }
+  } catch (error) {
+    console.error("ERROR::::", error);
+    return res.status(500).json({
+      message: "Something went wrong. Please try again.",
     });
   }
 };
