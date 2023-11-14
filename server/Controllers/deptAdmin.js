@@ -1,6 +1,7 @@
 import Teachers from "../models/teacher.js";
 import Students from "../models/student.js";
 import Courses from "../models/course.model.js";
+import TimeTables from "../models/timeTable.model.js";
 
 //! TG CONTROLLER
 export const fetchDeptTeacher = async (req, res) => {
@@ -15,6 +16,7 @@ export const fetchDeptTeacher = async (req, res) => {
         isTG: teachers[i].isTG ? teachers[i].isTG : false,
         empId: teachers[i].empId,
         email: teachers[i].email,
+        subjectsTaken: teachers[i].subjectsTaken,
       });
     }
     return res.status(200).json({
@@ -380,6 +382,73 @@ export const editCourse = async (req, res) => {
     console.error("ERROR::::", error);
     return res.status(500).json({
       message: "Something went wrong. Please try again.",
+    });
+  }
+};
+
+export const addTeacherToCourse = async (req, res) => {
+  try {
+    const courseId = req.query.courseId;
+
+    const teachers = req.body;
+    const courseInDB = await Courses.findById(courseId);
+
+    let taughtBy = courseInDB.taughtBy;
+
+    for (let i = 0; i < teachers.length; i++) {
+      if (
+        !taughtBy.includes({
+          teacherName: teachers[i].name,
+          teacherId: teachers[i].empId,
+        })
+      ) {
+        taughtBy = [
+          ...taughtBy,
+          {
+            teacherName: teachers[i].name,
+            teacherId: teachers[i].empId,
+          },
+        ];
+      }
+
+      const teacherInDB = await Teachers.findOne({
+        empId: teachers[i].empId,
+      });
+      teacherInDB.subjectsTaken = [
+        ...teacherInDB.subjectsTaken,
+        {
+          subjectName: courseInDB.courseName,
+          subjectCode: courseInDB.courseCode,
+          semester: courseInDB.semester,
+        },
+      ];
+      await teacherInDB.save();
+    }
+    courseInDB.taughtBy = taughtBy;
+    await courseInDB.save();
+    return res.status(200).json({
+      message: `${teachers.length} has been assigned as teacher for ${courseInDB.courseCode}`,
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Something went wrong. Please try again.",
+      success: false,
+    });
+  }
+};
+
+export const getTimeTable = async (req, res) => {
+  try {
+    const { section, semester, department } = req.query;
+    console.log(section, semester, department);
+    //work here
+  } catch (error) {
+    console.log("ERROR:::", error);
+    return res.status(500).json({
+      message: "Something went wrong. Please try again",
+      success: false,
     });
   }
 };

@@ -185,3 +185,32 @@ export async function editSingleCourse(course) {
     return error.response.data;
   }
 }
+
+export async function addTeacherToCourse(selectedStudents, course) {
+  try {
+    const response = await axios({
+      headers,
+      url: URL_2 + `add-teacher-to-course?courseId=${course._id}`,
+      method: "PATCH",
+      data: selectedStudents,
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export async function fetchTimeTableAdmin(data) {
+  try {
+    const response = await axios({
+      headers,
+      method: "GET",
+      url:
+        URL_2 +
+        `/get-time-table?section=${data.section}&semester=${data.semester}&department=${data.department}`,
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}

@@ -27,6 +27,8 @@ const teacherSchema = mongoose.Schema({
   subjectsTaken: [
     {
       subjectName: String,
+      subjectCode: String,
+      section: String,
       semester: String,
     },
   ],

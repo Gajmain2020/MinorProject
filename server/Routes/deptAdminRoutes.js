@@ -13,6 +13,8 @@ import {
   fetchCoursesByDept,
   deleteCourse,
   editCourse,
+  addTeacherToCourse,
+  getTimeTable,
 } from "../Controllers/deptAdmin.js";
 
 const router = express.Router();
@@ -36,6 +38,9 @@ router.get("/fetch-courses", fetchCoursesByDept);
 router.post("/add-course", addCourse);
 router.delete("/delete-course", deleteCourse);
 router.patch("/edit-course", editCourse);
+router.patch("/add-teacher-to-course", addTeacherToCourse);
+
+router.get("/get-time-table", getTimeTable);
 
 //! ___________________________________________________________________________________
 
