@@ -15,6 +15,8 @@ import {
   editCourse,
   addTeacherToCourse,
   getTimeTable,
+  getCoursesByDeptAndSemester,
+  addTimeTableToDB,
 } from "../Controllers/deptAdmin.js";
 
 const router = express.Router();
@@ -35,12 +37,14 @@ router.patch("/assign-students-to-tg", assignTgToStudents);
 //! ___________________________________________________________________________________
 //! Course and Time table routing _______________________________________________________________
 router.get("/fetch-courses", fetchCoursesByDept);
+router.get("/get-courses-by-dept-semester", getCoursesByDeptAndSemester);
 router.post("/add-course", addCourse);
 router.delete("/delete-course", deleteCourse);
 router.patch("/edit-course", editCourse);
 router.patch("/add-teacher-to-course", addTeacherToCourse);
 
 router.get("/get-time-table", getTimeTable);
+router.post("/add-time-table", addTimeTableToDB);
 
 //! ___________________________________________________________________________________
 

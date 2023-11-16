@@ -200,14 +200,45 @@ export async function addTeacherToCourse(selectedStudents, course) {
   }
 }
 
-export async function fetchTimeTableAdmin(data) {
+export async function fetchTimeTableAdmin(data, dept) {
   try {
     const response = await axios({
       headers,
       method: "GET",
       url:
         URL_2 +
-        `/get-time-table?section=${data.section}&semester=${data.semester}&department=${data.department}`,
+        `/get-time-table?section=${data.section}&semester=${data.semester}&department=${dept}`,
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export async function fetchCoursesByDeptAndSemester(semester, department) {
+  try {
+    const response = await axios({
+      headers,
+      method: "GET",
+      url:
+        URL_2 +
+        `/get-courses-by-dept-semester?semester=${semester}&department=${department}`,
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export async function addTimeTable(searchData, timeTable, dept) {
+  try {
+    const response = await axios({
+      headers,
+      method: "POST",
+      url:
+        URL_2 +
+        `/add-time-table?semester=${searchData.semester}&department=${dept}&section=${searchData.section}`,
+      data: timeTable,
     });
     return response.data;
   } catch (error) {

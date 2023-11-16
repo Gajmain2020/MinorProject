@@ -28,8 +28,14 @@ const teacherSchema = mongoose.Schema({
     {
       subjectName: String,
       subjectCode: String,
-      section: String,
       semester: String,
+    },
+  ],
+  classesTaken: [
+    {
+      subjectShortName: String,
+      semester: String,
+      section: String,
     },
   ],
   isTG: { type: Boolean, default: false },

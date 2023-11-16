@@ -442,12 +442,101 @@ export const addTeacherToCourse = async (req, res) => {
 export const getTimeTable = async (req, res) => {
   try {
     const { section, semester, department } = req.query;
-    console.log(section, semester, department);
-    //work here
+    const timeTableInDB = await TimeTables.findOne({
+      semester,
+      section,
+      department,
+    });
+    if (!timeTableInDB) {
+      return res.status(404).json({
+        message: "No time table for give data. Create One Now.",
+        success: true,
+        timeTableExists: false,
+      });
+    }
+    return res.status(200).json({
+      message: "Time table exists for the given data.",
+      timeTable: timeTableInDB,
+      success: true,
+      timeTableExists: true,
+    });
   } catch (error) {
     console.log("ERROR:::", error);
     return res.status(500).json({
       message: "Something went wrong. Please try again",
+      success: false,
+    });
+  }
+};
+
+export const getCoursesByDeptAndSemester = async (req, res) => {
+  try {
+    const { semester, department } = req.query;
+
+    const coursesInDB = await Courses.find({
+      semester,
+      department,
+    });
+    return res.status(200).json({
+      courses: coursesInDB,
+      success: true,
+      message: "Courses sent successfully",
+    });
+  } catch (error) {
+    console.log("ERROR:::", error);
+    return res.status(500).json({
+      message: "Something went wrong. Please try again.",
+      success: false,
+    });
+  }
+};
+
+const DAYS = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+
+export const addTimeTableToDB = async (req, res) => {
+  try {
+    const { semester, department, section } = req.query;
+    const timeTable = req.body;
+    const reconstructedTimeTable = [];
+
+    //formatting the json for database
+    for (let i = 0; i < DAYS.length; i++) {
+      const tt = { day: DAYS[i], details: [] };
+      for (let j = 0; j < timeTable[i].length; j++) {
+        if (i === 0 && j === 4) continue;
+
+        tt.details = [
+          ...tt.details,
+          {
+            subject: timeTable[i][j].subjectShortName,
+            teacher: timeTable[i][j].teacherName,
+          },
+        ];
+      }
+      reconstructedTimeTable.push(tt);
+    }
+    const timeTableInDB = await TimeTables.create({
+      semester,
+      section,
+      department,
+      time_table: reconstructedTimeTable,
+    });
+    return res.status(200).json({
+      message: "Time Table created successfully.",
+      timeTable: timeTableInDB,
+      success: true,
+    });
+  } catch (error) {
+    console.log("ERRROR:::", error);
+    return res.status(500).json({
+      message: "Something went wrong. Please try again.",
       success: false,
     });
   }

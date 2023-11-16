@@ -7,10 +7,13 @@ const timeTableSchema = new mongoose.Schema(
     department: String,
     time_table: [
       {
-        timeSlot: String,
-        subject: String,
-        teacher: String,
-        subjectCode: String,
+        day: String,
+        details: [
+          {
+            subject: String,
+            teacher: String,
+          },
+        ],
       },
     ],
   },
