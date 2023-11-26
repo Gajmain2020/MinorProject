@@ -65,3 +65,35 @@ export async function verifySingleStudent(data) {
     return error.response.data;
   }
 }
+
+export async function fetchClassesForTeacher(id) {
+  try {
+    const response = await axios({
+      headers,
+      url: teacherUrl + `/fetch-classes?id=${id}`,
+      method: "GET",
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export async function fetchStudentBySectionAndSemester(
+  dept,
+  section,
+  semester
+) {
+  try {
+    const response = await axios({
+      headers,
+      url:
+        teacherUrl +
+        `/fetch-students?dept=${dept}&semester=${semester}&section=${section}`,
+      method: "GET",
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}

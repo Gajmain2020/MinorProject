@@ -6,6 +6,7 @@ export default function TeacherHomepage() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
   return (
     <>
       <Snackbar
@@ -48,29 +49,83 @@ export default function TeacherHomepage() {
         </div>
         <div className="w-full mt-4">
           <div className=" mx-auto bg-gray-100/50 p-6 rounded-md shadow-md">
-            <div className="mb-4">
+            <div className="text-xl text-gray-700 underline">Academic ::</div>
+            <div className="mb-2">
               <div className="flex gap-4 lg:flex-nowrap md:flex-nowrap xs:flex-wrap sm:flex-wrap ">
                 <div className="w-1/2 sm:w-full xs:w-full sm:mb-4 xs:mb-4">
                   <Button
                     className="btn"
                     variant="contained"
-                    sx={{ height: "130%" }}
+                    sx={{ height: "110%", marginX: "auto" }}
+                    fullWidth
+                    onClick={() => navigate("add-attandance")}
+                  >
+                    Add Attandance
+                  </Button>
+                </div>
+                <div className="w-1/2 sm:w-full xs:w-full sm:mb-4 xs:mb-4">
+                  <Button
+                    className="btn"
+                    variant="contained"
+                    sx={{ height: "110%", marginX: "auto" }}
+                    fullWidth
+                    onClick={() => alert("backdrop componetn")}
+                  >
+                    Release Assignment
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <div className="mb-2">
+              <div className="flex gap-4 lg:flex-nowrap md:flex-nowrap xs:flex-wrap sm:flex-wrap ">
+                <div className="w-1/2 sm:w-full xs:w-full sm:mb-4 xs:mb-4">
+                  <Button
+                    className="btn"
+                    variant="contained"
+                    sx={{ height: "110%", marginX: "auto" }}
+                    fullWidth
+                    onClick={() => alert("navigate to diffn")}
+                  >
+                    View Assignments
+                  </Button>
+                </div>
+                <div className="w-1/2 sm:w-full xs:w-full sm:mb-4 xs:mb-4">
+                  <Button
+                    className="btn"
+                    variant="contained"
+                    sx={{ height: "110%", marginX: "auto" }}
+                    fullWidth
+                    onClick={() => alert("navigate to diffn")}
+                  >
+                    Add Class Test Marks
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <div className="mb-2">
+              <div className="flex gap-4 lg:flex-nowrap md:flex-nowrap xs:flex-wrap sm:flex-wrap ">
+                <div className="w-1/2 sm:w-full xs:w-full sm:mb-4 xs:mb-4">
+                  <Button
+                    className="btn"
+                    variant="contained"
+                    sx={{ height: "110%", marginX: "auto" }}
+                    fullWidth
+                    onClick={() => alert("navigate to diffn")}
+                  >
+                    Add Notice
+                  </Button>
+                </div>
+                <div className="w-1/2 sm:w-full xs:w-full sm:mb-4 xs:mb-4">
+                  <Button
+                    className="btn"
+                    variant="contained"
+                    sx={{ height: "110%", marginX: "auto" }}
                     fullWidth
                     onClick={() => navigate("validate-students")}
                   >
                     Validate Students
                   </Button>
                 </div>
-                {/* <div className="w-1/2 sm:w-full xs:w-full sm:mb-4 xs:mb-4">
-                  <Button
-                    className="btn"
-                    variant="contained"
-                    sx={{ height: "130%" }}
-                    fullWidth
-                  >
-                    Add Teachers
-                  </Button>
-                </div> */}
               </div>
             </div>
           </div>
@@ -79,3 +134,11 @@ export default function TeacherHomepage() {
     </>
   );
 }
+
+// ! features for teacher
+//adding attandance
+//releasing assignment ---pdf formate only
+//adding marks
+//adding ct marks
+//adding notice
+//viewing assignments

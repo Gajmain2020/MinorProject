@@ -40,6 +40,15 @@ const TIME_SLOT = [
   "03:00 - 03:50",
   "03:50 - 04:40",
 ];
+const TIME_SLOT_2 = [
+  "10:00 - 10:50",
+  "10:50 - 11:40",
+  "11:40 - 12:30",
+  "12:30 - 01:20",
+  "02:10 - 03:00",
+  "03:00 - 03:50",
+  "03:50 - 04:40",
+];
 const DAYS = [
   "Monday",
   "Tuesday",
@@ -332,7 +341,8 @@ export default function TimeTableManagement() {
   function handleTeacherChange(e) {
     INITIAL_TIME_TABLE[tt.day][tt.slot] = {
       ...INITIAL_TIME_TABLE[tt.day][tt.slot],
-      teacherName: e.target.value,
+      teacherName: e.target.value.teacherName,
+      teacherId: e.target.value.teacherId,
     };
     setTt(null);
   }
@@ -651,10 +661,7 @@ export default function TimeTableManagement() {
                                   .subjectShortName
                               ) {
                                 return course.taughtBy.map((tea) => (
-                                  <MenuItem
-                                    key={tea._id}
-                                    value={tea.teacherName}
-                                  >
+                                  <MenuItem key={tea._id} value={tea}>
                                     {tea.teacherName}
                                   </MenuItem>
                                 ));
@@ -668,6 +675,100 @@ export default function TimeTableManagement() {
               </div>
             </Backdrop>
           </Modal>
+        )}
+
+        {dataFetched && timeTable && (
+          <>
+            <div>
+              <TableContainer component={Paper} sx={{ padding: "5px" }}>
+                <Table size="small">
+                  <TableHead>
+                    <TableRow sx={{ backgroundColor: "#B0A695" }}>
+                      <TableCell
+                        sx={{ outline: "2px solid black" }}
+                        align="center"
+                        colSpan={3}
+                      >
+                        <u>Section</u> :: <b>{timeTable.section}</b>
+                      </TableCell>
+                      <TableCell
+                        sx={{ outline: "2px solid black" }}
+                        align="center"
+                        colSpan={3}
+                      >
+                        <u>Semester</u> :: <b>{timeTable.semester}</b>
+                      </TableCell>
+                      <TableCell
+                        sx={{ outline: "2px solid black" }}
+                        align="center"
+                        colSpan={2}
+                      >
+                        <u>Department</u> :: <b>{timeTable.department}</b>
+                      </TableCell>
+                    </TableRow>
+                    <TableRow sx={{ backgroundColor: "#B0A695" }}>
+                      <TableCell
+                        sx={{ outline: "2px solid black" }}
+                        rowSpan={2}
+                      >
+                        Day
+                      </TableCell>
+                      {TIME_SLOT_2.map((t, idx) => (
+                        <TableCell
+                          sx={{ outline: "2px solid black" }}
+                          align="center"
+                          key={idx}
+                        >
+                          {idx + 1}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                    <TableRow sx={{ backgroundColor: "#B0A695" }}>
+                      {TIME_SLOT_2.map((t) => (
+                        <TableCell
+                          sx={{ outline: "2px solid black" }}
+                          align="center"
+                          key={t}
+                        >
+                          {t}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {timeTable.time_table.map((day, idx) => (
+                      <>
+                        <TableRow key={idx}>
+                          <TableCell
+                            rowSpan={2}
+                            sx={{ outline: "2px solid black" }}
+                          >
+                            <b>{day.day}</b>
+                          </TableCell>
+                          {day.details.map((sub, ind) => {
+                            return (
+                              <TableCell align="center" key={ind}>
+                                {sub.subject}
+                              </TableCell>
+                            );
+                          })}
+                        </TableRow>
+                        <TableRow>
+                          {day.details.map((sub, ind) => {
+                            return (
+                              <TableCell align="center" key={ind}>
+                                {sub.teacher}
+                              </TableCell>
+                            );
+                          })}
+                        </TableRow>
+                      </>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </div>
+          </>
         )}
       </div>
     </>

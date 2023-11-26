@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { TextField, Button, Snackbar, Alert } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Snackbar,
+  Alert,
+  IconButton,
+  InputAdornment,
+} from "@mui/material";
 import jwtDecode from "jwt-decode";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -71,6 +78,13 @@ export default function Homepage({ token, setToken }) {
         setToken(res.token);
         navigate(`/student/${res.department}/${res.id}`);
       });
+    }
+  }
+
+  function handleKeyDown(e) {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      handleLoginClick();
     }
   }
 
@@ -149,6 +163,7 @@ export default function Homepage({ token, setToken }) {
                 setData((data) => ({ ...data, email: e.target.value }))
               }
               value={data.email}
+              onKeyDown={handleKeyDown}
             />
           </div>
           <div className="mb-4">
@@ -167,13 +182,24 @@ export default function Homepage({ token, setToken }) {
                   setData((data) => ({ ...data, password: e.target.value }))
                 }
                 value={data.password}
+                onKeyDown={handleKeyDown}
+                InputProps={{
+                  endAdornment: (
+                    <IconButton
+                      size="small"
+                      color="warning"
+                      onClick={() => setShowPassword((pass) => !pass)}
+                      position="start"
+                    >
+                      {showPassword ? (
+                        <VisibilityOffIcon />
+                      ) : (
+                        <VisibilityIcon />
+                      )}
+                    </IconButton>
+                  ),
+                }}
               />
-              <Button
-                size="small"
-                onClick={() => setShowPassword((pass) => !pass)}
-              >
-                {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-              </Button>
             </div>
           </div>
           <Button

@@ -500,6 +500,16 @@ const DAYS = [
   "Saturday",
 ];
 
+const TIME_SLOT = [
+  "10:00 - 10:50",
+  "10:50 - 11:40",
+  "11:40 - 12:30",
+  "12:30 - 01:20",
+  "02:10 - 03:00",
+  "03:00 - 03:50",
+  "03:50 - 04:40",
+];
+
 export const addTimeTableToDB = async (req, res) => {
   try {
     const { semester, department, section } = req.query;
@@ -511,6 +521,32 @@ export const addTimeTableToDB = async (req, res) => {
       const tt = { day: DAYS[i], details: [] };
       for (let j = 0; j < timeTable[i].length; j++) {
         if (i === 0 && j === 4) continue;
+
+        const teacherInDB = await Teachers.findOne({
+          empId: timeTable[i][j].teacherId,
+        });
+
+        let classExists = false;
+        for (let k = 0; k < teacherInDB.classesTaken.length; k++) {
+          if (
+            teacherInDB.classesTaken[k].subjectShortName ===
+              timeTable[i][j].subjectShortName &&
+            teacherInDB.classesTaken[k].semester === semester &&
+            teacherInDB.classesTaken[k].section === section
+          ) {
+            classExists = true;
+            break;
+          }
+        }
+
+        if (!classExists) {
+          teacherInDB.classesTaken.push({
+            subjectShortName: timeTable[i][j].subjectShortName,
+            semester,
+            section,
+          });
+          await teacherInDB.save();
+        }
 
         tt.details = [
           ...tt.details,

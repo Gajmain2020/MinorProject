@@ -139,3 +139,45 @@ export const validateSingleStudent = async (req, res) => {
     });
   }
 };
+
+export const fetchClasses = async (req, res) => {
+  try {
+    const id = req.query.id;
+    const teacherInDB = await Teachers.findById(id);
+    if (!teacherInDB) {
+      return res
+        .status(404)
+        .json({ message: "No Teacher found with given id.", success: false });
+    }
+    return res.status(200).json({
+      message: "Classes sent successfully.",
+      classes: teacherInDB.classesTaken,
+      success: true,
+    });
+  } catch (error) {
+    console.log("ERROR:::", error);
+    return res.status(500).json({
+      message: "Something went wrong. Please try again.",
+      success: false,
+    });
+  }
+};
+
+export const fetchStudents = async (req, res) => {
+  try {
+    const { dept, semester, section } = req.query;
+    console.log(dept, semester, section);
+
+    const students = await Students.find({
+      department: dept,
+      section: "A",
+    });
+    console.log(students);
+  } catch (error) {
+    console.log("ERROR:::", error);
+    return res.status(500).json({
+      message: "Something went wrong. Please try again.",
+      success: false,
+    });
+  }
+};

@@ -21,6 +21,8 @@ import TeacherHomepage from "./Component/Teacher/TeacherHomepage";
 import ValidateStudents from "./Component/Teacher/Helper/ValidateStudents";
 import AddTeachersToCourses from "./Component/Admin/AcademicDepartment/Helper/AddTeachersToCourses";
 import ViewEditCourses from "./Component/Admin/AcademicDepartment/Helper/ViewEditCourses";
+import AddAttandance from "./Component/Teacher/Helper/AddAttandance";
+import AddAttandanceClass from "./Component/Teacher/Helper/AddAttandanceClass";
 
 function App() {
   const [token, setToken] = useState("");
@@ -88,6 +90,14 @@ function App() {
             <Route
               path="validate-students"
               element={<ValidateStudents token={token} setToken={setToken} />}
+            />
+            <Route
+              path="add-attandance"
+              element={<AddAttandance token={token} setToken={setToken} />}
+            />
+            <Route
+              path="add-attandance/:query"
+              element={<AddAttandanceClass token={token} setToken={setToken} />}
             />
           </Route>
           <Route path="/student/:department/:id">

@@ -24,20 +24,26 @@ const teacherSchema = mongoose.Schema({
       isVerified: { type: Boolean, default: false },
     },
   ],
-  subjectsTaken: [
-    {
-      subjectName: String,
-      subjectCode: String,
-      semester: String,
-    },
-  ],
-  classesTaken: [
-    {
-      subjectShortName: String,
-      semester: String,
-      section: String,
-    },
-  ],
+  subjectsTaken: {
+    type: [
+      {
+        subjectName: String,
+        subjectCode: String,
+        semester: String,
+      },
+    ],
+    default: [],
+  },
+  classesTaken: {
+    type: [
+      {
+        subjectShortName: String,
+        semester: String,
+        section: String,
+      },
+    ],
+    default: [],
+  },
   isTG: { type: Boolean, default: false },
   createdAt: { type: Date, default: new Date() },
   updatedAt: { type: Date, default: new Date() },

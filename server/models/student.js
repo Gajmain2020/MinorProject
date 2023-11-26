@@ -45,6 +45,13 @@ const studentSchema = mongoose.Schema({
       fine: Number,
     },
   ],
+  totalAttandance: [
+    {
+      subjectShortName: String,
+      totalClassesHeld: Number,
+      totalClassesAttended: Number,
+    },
+  ],
   createdAt: { type: Date, default: new Date() },
   updatedAt: { type: Date, default: new Date() },
 });

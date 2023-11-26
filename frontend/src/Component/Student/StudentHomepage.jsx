@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Alert,
   Button,
@@ -9,7 +10,6 @@ import {
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
-  fetchStudentDetails,
   fetchStudentDetailsById,
   saveStudentDetails,
 } from "../../../api/student";

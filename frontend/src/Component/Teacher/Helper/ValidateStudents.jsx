@@ -34,6 +34,7 @@ export default function ValidateStudents() {
   const [students, setStudents] = useState([]);
   const [student, setStudent] = useState(null);
   const [studentDetails, setStudentDetails] = useState(null);
+  const [dataFetched, setDataFetched] = useState(false);
   const [apiCalled, setApiCalled] = useState(false);
   //   const [openDetailsBackdrop, setOpenDetailsBackdrop] = useState(false);
   const [selectedStudents, setSelectedStudents] = useState([]);
@@ -43,6 +44,7 @@ export default function ValidateStudents() {
 
   useEffect(() => {
     fetchStudentsByTG(id).then((res) => {
+      setDataFetched(true);
       if (!res.success) {
         setErrorMessage(res.message);
         return;
@@ -56,6 +58,7 @@ export default function ValidateStudents() {
   useEffect(() => {
     if (student !== null) {
       fetchStudentDetails(student.urn).then((res) => {
+        setDataFetched(true);
         if (!res.success) {
           setErrorMessage(res.message);
           return;
@@ -237,7 +240,7 @@ export default function ValidateStudents() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {students.length === 0 && (
+                {students.length === 0 && dataFetched && (
                   <>
                     <TableRow>
                       <TableCell colSpan={5}>
