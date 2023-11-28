@@ -1,5 +1,5 @@
 import express from "express";
-import { postComplaint } from "../Controllers/commonControls.js";
+import { postComplaint } from "../Controllers/common.controller.js";
 
 const router = express.Router();
 

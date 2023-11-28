@@ -1,8 +1,8 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-import Teachers from "../models/teacher.js";
-import Students from "../models/student.js";
+import Teachers from "../models/teacher.model.js";
+import Students from "../models/student.model.js";
 
 export const loginTeacher = async (req, res) => {
   try {
@@ -166,13 +166,17 @@ export const fetchClasses = async (req, res) => {
 export const fetchStudents = async (req, res) => {
   try {
     const { dept, semester, section } = req.query;
-    console.log(dept, semester, section);
 
     const students = await Students.find({
       department: dept,
-      section: "A",
+      section,
+      semester,
     });
-    console.log(students);
+    return res.status(200).json({
+      message: "Students sent successfully.",
+      success: true,
+      students,
+    });
   } catch (error) {
     console.log("ERROR:::", error);
     return res.status(500).json({

@@ -1,10 +1,12 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import Admin from "../models/admin.js";
-import Students from "../models/student.js";
-import Books from "../models/books.js";
-import Teachers from "../models/teacher.js";
 import { isValidObjectId } from "mongoose";
+
+//importing models
+import Admin from "../models/admin.model.js";
+import Students from "../models/student.model.js";
+import Books from "../models/books.model.js";
+import Teachers from "../models/teacher.model.js";
 
 // ** Admin Controllers **
 export const signUp = async (req, res) => {

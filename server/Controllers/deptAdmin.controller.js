@@ -1,5 +1,5 @@
-import Teachers from "../models/teacher.js";
-import Students from "../models/student.js";
+import Teachers from "../models/teacher.model.js";
+import Students from "../models/student.model.js";
 import Courses from "../models/course.model.js";
 import TimeTables from "../models/timeTable.model.js";
 

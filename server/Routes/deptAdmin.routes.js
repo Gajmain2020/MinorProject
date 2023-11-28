@@ -17,7 +17,7 @@ import {
   getTimeTable,
   getCoursesByDeptAndSemester,
   addTimeTableToDB,
-} from "../Controllers/deptAdmin.js";
+} from "../Controllers/deptAdmin.controller.js";
 
 const router = express.Router();
 

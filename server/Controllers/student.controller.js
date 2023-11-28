@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
-import Students from "../models/student.js";
-import Teachers from "../models/teacher.js";
+import Students from "../models/student.model.js";
+import Teachers from "../models/teacher.model.js";
 
 export const getStudentDetails = async (req, res) => {
   const { urn } = req.query;

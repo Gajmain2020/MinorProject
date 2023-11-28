@@ -26,8 +26,8 @@ import {
   updateSingleTeacher,
   deleteSingleTeacher,
   deleteMultipleTeacher,
-} from "../Controllers/adminControls.js";
-import { authAdmin } from "../middleware/authentication.js";
+} from "../Controllers/admin.controller.js";
+import { authAdmin } from "../middleware/authentication.middleware.js";
 
 const router = express.Router();
 

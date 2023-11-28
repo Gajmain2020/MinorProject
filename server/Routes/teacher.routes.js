@@ -6,7 +6,7 @@ import {
   validateMultipleStudents,
   fetchClasses,
   fetchStudents,
-} from "../Controllers/teacherControls.js";
+} from "../Controllers/teacher.controller.js";
 
 const router = express.Router();
 

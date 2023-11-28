@@ -47,6 +47,7 @@ const studentSchema = mongoose.Schema({
   ],
   totalAttandance: [
     {
+      month: String,
       subjectShortName: String,
       totalClassesHeld: Number,
       totalClassesAttended: Number,

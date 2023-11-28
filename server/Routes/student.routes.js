@@ -1,12 +1,11 @@
 import express from "express";
-import { authAdmin } from "../middleware/authentication.js";
 import {
   getStudentDetails,
   loginStudent,
   fetchStudentDetails,
   saveStudentDetails,
   fetchStudentDetailsById,
-} from "../Controllers/studentControls.js";
+} from "../Controllers/student.controller.js";
 
 const router = express.Router();
 

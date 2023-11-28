@@ -7,11 +7,11 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 
 //importing routes from Routes
-import adminRoutes from "./Routes/adminRoutes.js";
-import studentRoutes from "./Routes/studentRoutes.js";
-import teacherRoutes from "./Routes/teacherRoutes.js";
-import commonRoutes from "./Routes/commonRoutes.js";
-import deptAdminRoutes from "./Routes/deptAdminRoutes.js";
+import adminRoutes from "./Routes/admin.routes.js";
+import studentRoutes from "./Routes/student.routes.js";
+import teacherRoutes from "./Routes/teacher.routes.js";
+import commonRoutes from "./Routes/common.routes.js";
+import deptAdminRoutes from "./Routes/deptAdmin.routes.js";
 
 const app = express();
 
