@@ -4,8 +4,8 @@ import {
   signUp,
   getDetails,
   updateAdmin,
-  addIndividualStudent,
-  addMultipleStudents,
+  registerIndividualStudent,
+  registerMultipleStudents,
   fetchAllStudents,
   deleteSingleStudent,
   deleteMultipleStudents,
@@ -19,8 +19,8 @@ import {
   editBook,
   getBookDetails,
   returnBooks,
-  addIndividualTeacher,
-  addMultipleTeachers,
+  registerIndividualTeacher,
+  registerMultipleTeachers,
   getStudentDetails,
   fetchAllTeachers,
   updateSingleTeacher,
@@ -39,16 +39,16 @@ router.patch("/update-admin", updateAdmin);
 //! student Routes.... All require middleware to call and prorceed further....
 router.get("/academics/get-details/:urn", getStudentDetails);
 router.get("/academics/fetch-students", fetchAllStudents);
-router.post("/academics/add-single-student", addIndividualStudent);
-router.post("/academics/add-multiple-students", addMultipleStudents);
+router.post("/academics/register-single-student", registerIndividualStudent);
+router.post("/academics/register-multiple-students", registerMultipleStudents);
 router.patch("/academics/update-student", updateSingleStudent);
 router.delete("/academics/delete-student/:urn", deleteSingleStudent);
 router.delete("/academics/delete-students", deleteMultipleStudents);
 
 //! teacher routers ..... all require middleware to call and proceed further...
 router.get("/academics/fetch-teachers", fetchAllTeachers);
-router.post("/academics/add-single-teacher", addIndividualTeacher);
-router.post("/academics/add-multiple-teachers", addMultipleTeachers);
+router.post("/academics/register-single-teacher", registerIndividualTeacher);
+router.post("/academics/register-multiple-teachers", registerMultipleTeachers);
 router.patch("/academics/update-teacher", updateSingleTeacher);
 router.delete("/academics/delete-teacher/:empId", deleteSingleTeacher);
 router.delete("/academics/delete-teachers", deleteMultipleTeacher);

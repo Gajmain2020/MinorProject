@@ -260,47 +260,49 @@ export const updateSingleTeacher = async (req, res) => {
     });
   }
 };
-export const addIndividualTeacher = async (req, res) => {
+
+export const registerIndividualTeacher = async (req, res) => {
   try {
-    const data = req.body;
+    const { name, email, empId, department } = req.body;
 
     const isTeacherAlreadyExisting = await Teachers.findOne({
-      email: data.email,
+      $or: [{ empId }, { email }],
     });
-    const isEmpIdRegistered = await Teachers.findOne({ empId: data.empId });
 
-    if (isTeacherAlreadyExisting || isEmpIdRegistered) {
+    if (isTeacherAlreadyExisting) {
       return res
         .status(400)
-        .json({ message: "Email or EmpID elready exists.", success: false });
+        .json({ message: "Email or EmpID already exists.", success: false });
     }
-    const password = await bcrypt.hash(data.email, 10);
+    const password = await bcrypt.hash(email, 10);
 
     await Teachers.create({
-      name: data.name,
-      email: data.email,
-      department: data.department,
-      empId: data.empId,
+      name,
+      email,
+      department,
+      empId,
       password,
     });
     return res
       .status(200)
       .json({ message: "Teacher added Successfully.", success: true });
   } catch (error) {
-    console.log(error);
+    console.log("Error:" + error);
     return res.status(500).json({ message: error.message, success: false });
   }
 };
-export const addMultipleTeachers = async (req, res) => {
+export const registerMultipleTeachers = async (req, res) => {
   try {
     const added = [];
     const rejected = [];
-    const teachers = req.body;
+    const teachers = req.body.teachers;
 
     for (let i = 0; i < teachers.length; i++) {
-      const { urn, empId, name, dept, email } = teachers[i];
+      const { empId, name, department, email } = teachers[i];
 
-      const studentAlreadyAdded = await Students.findOne({ urn });
+      const studentAlreadyAdded = await Students.findOne({
+        $or: [{ empId }, { email }],
+      });
       if (studentAlreadyAdded) {
         rejected.push(teachers[i]);
         continue;
@@ -311,8 +313,7 @@ export const addMultipleTeachers = async (req, res) => {
         empId,
         password: encryptedPassword,
         email,
-        department: dept,
-        profileComplete: false,
+        department,
       });
       added.push(teachers[i]);
     }
@@ -371,64 +372,77 @@ export const deleteMultipleTeacher = async (req, res) => {
 };
 
 // ** Student Controllers **
-export const addIndividualStudent = async (req, res) => {
+export const registerIndividualStudent = async (req, res) => {
   try {
-    const data = req.body;
+    const { name, email, department, urn, crn, semester, section } = req.body;
+    if (
+      [name, email, department, urn, crn, semester].some(
+        (field) => field?.trim() === ""
+      )
+    ) {
+      return res.status(404).json({
+        message: "All fields must be filled.",
+        success: false,
+      });
+    }
 
     const isStudentAlreadyExisting = await Students.findOne({
-      email: data.email,
+      $or: [{ name }, { urn }],
     });
-    const isRollNoRegistered = await Students.findOne({ urn: data.urn });
 
-    if (isStudentAlreadyExisting || isRollNoRegistered) {
+    if (isStudentAlreadyExisting) {
       return res
         .status(400)
         .json({ message: "Email or URN elready exists.", success: false });
     }
-    const password = await bcrypt.hash(data.email, 10);
+
+    const hashPassword = await bcrypt.hash(email, 10);
 
     await Students.create({
-      name: data.name,
-      email: data.email,
-      department: data.department,
-      phoneNumber: data.phoneNumber,
-      urn: data.urn,
-      password,
-      year: data.year,
+      name,
+      department,
+      email,
+      crn: section + "-" + crn,
+      urn,
+      password: hashPassword,
+      semester,
+      section,
     });
     return res
       .status(200)
       .json({ message: "Student added Successfully.", success: true });
   } catch (error) {
-    console.log(error);
+    console.log("error:::", error.message);
     return res.status(500).json({ message: error.message, success: false });
   }
 };
 
-export const addMultipleStudents = async (req, res) => {
+export const registerMultipleStudents = async (req, res) => {
   try {
     const added = [];
     const rejected = [];
-    const students = req.body;
+    const students = req.body.students;
     for (let i = 0; i < students.length; i++) {
-      const { urn, name, section, crn, semester, department, email } =
+      const { name, email, department, urn, crn, semester, section } =
         students[i];
 
-      const studentAlreadyAdded = await Students.findOne({ urn });
+      const studentAlreadyAdded = await Students.findOne({
+        $or: [{ urn }, { email }],
+      });
       if (studentAlreadyAdded) {
         rejected.push(students[i]);
         continue;
       }
+
       const encryptedPassword = await bcrypt.hash(email, 10);
       await Students.create({
         name,
-        urn,
-        password: encryptedPassword,
         email,
         department,
+        urn,
         semester,
-        profileComplete: false,
         section,
+        password: encryptedPassword,
         crn: section + "-" + crn,
       });
       added.push(students[i]);
@@ -448,6 +462,7 @@ export const addMultipleStudents = async (req, res) => {
 
 export const fetchAllStudents = async (req, res) => {
   try {
+    //need to add pagination here
     const students = await Students.find();
     const studentData = students.map((student) => ({
       name: student.name,
